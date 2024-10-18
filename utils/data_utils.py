@@ -60,7 +60,7 @@ def preprocess_data(df):
     df = df.sort_values(['Data da Validação'], ascending=False)
     df = df.sort_values(['Data do Cadastro'], ascending=False)
     df['Year'] = df['Data do Cadastro'].dt.year.astype(str)
-    df['Month'] = df['Data do Cadastro'].dt.month.astype(str)
+    df['Month'] = df['Data do Cadastro'].dt.month.astype(str).str.zfill(2)
     df['Day'] = df['Data do Cadastro'].dt.strftime('%d')
     df['Hour'] = df['Data do Cadastro'].dt.strftime('%H')
     df['Ano de Validação'] = df['Data da Validação'].dt.year.astype(str)
