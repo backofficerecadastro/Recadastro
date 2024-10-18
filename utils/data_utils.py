@@ -64,7 +64,7 @@ def preprocess_data(df):
     df['Day'] = df['Data do Cadastro'].dt.strftime('%d')
     df['Hour'] = df['Data do Cadastro'].dt.strftime('%H')
     df['Ano de Validação'] = df['Data da Validação'].dt.year.astype(str)
-    df['Mês de Validação'] = df['Data da Validação'].dt.month.astype(str)
+    df['Mês de Validação'] = df['Data da Validação'].dt.month.astype(str).str.zfill(2)
     df['Dia de Validação'] = df['Data da Validação'].dt.strftime('%d')
     df['Hora de Validação'] = df['Data da Validação'].dt.strftime('%H')
     nao_validavel = ['MORADOR IMPEDIU', 'CASA FECHADA 1ª VISITA', 'CASA FECHADA 2ª VISITA', 'Casa Fechada', 'Morador impediu']
