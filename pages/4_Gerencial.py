@@ -6,7 +6,7 @@ from utils.data_utils import load_and_concatenate_data, preprocess_data, create_
 
 # Definir a estrutura da aplicação Streamlit
 st.set_page_config(page_title="Seletor de Datas Deslizante")
-st.title("Seletor de Datas Deslizante")
+st.title("Visualização Gerencial")
 
 # Carregar os dados
 df0 = load_and_concatenate_data()
@@ -22,7 +22,7 @@ start_date = st.sidebar.date_input(
 
 end_date = st.sidebar.date_input(
     "Data Final",
-    datetime(2024, 12, 6),
+    datetime(2024, 12, 31),
     min_value=datetime(2024, 1, 1),
     max_value=datetime(2026, 6, 1)
 )
@@ -44,3 +44,14 @@ end_date_dt = pd.Timestamp(end_date)
 # Filtrar os dados com base no intervalo de datas selecionado
 mask = (df['Data do Cadastro'] >= start_date_dt) & (df['Data do Cadastro'] <= end_date_dt)
 filtered_df = df.loc[mask]
+
+color_map = {'Validado': '#00049E', 'Não Validado': '#7275FE', 'Aguardando Análise': 'gray', 'Complemento de Fotos e Informações': 'gray', 'Revisão Interna': 'gray'}
+color_map1 = ['#00049E','#7275FE']
+
+mes_total = filtered_df.groupby(['Month'])['Matrícula'].count().reset_index()
+fig_date = create_bar_chart(mes_total, 'Month', 'Matrícula',None, "Visitas por Mês", color_map1=color_map1)
+st.plotly_chart(fig_date)
+
+
+
+
