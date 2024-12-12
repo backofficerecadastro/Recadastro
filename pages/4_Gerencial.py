@@ -30,8 +30,7 @@ def main():
 
     #Botões
     localidade = st.sidebar.selectbox('Localidade', local)
-    ano = st.sidebar.selectbox('Ano', df['Year'].unique())
-    mes = st.sidebar.selectbox('Mês', m0)
+    
     tipo_de_ocorrencia = st.sidebar.selectbox('Tipo de Ocorrência', oc)
     tipo_de_validação = st.sidebar.selectbox('Tipo de Validação', val)
     
@@ -52,15 +51,15 @@ def main():
     df_filtrado = df_filtrado.sort_values(['Data do Cadastro'], ascending=False)
 
     # Criar o seletor de datas na página
-    col1, col2 = st.columns(2)
-    with col1:
+    col01, col02 = st.columns(2)
+    with col01:
         start_date = st.date_input(
             "Data Inicial",
             datetime(2024, 1, 1),
             min_value=datetime(2021, 6, 1),
             max_value=datetime(2026, 8, 1)
         )
-    with col2:
+    with col02:
         end_date = st.date_input(
             "Data Final",
             datetime(2024, 12, 31),
@@ -82,32 +81,36 @@ def main():
                  'Complemento de Fotos e Informações': 'gray', 'Revisão Interna': 'gray',
                  'Validável': '#00049E', 'Não validável': 'gray', 'Total':'#706E6F'}
     color_map1 = ['#00049E','#7275FE']
-
+    
     mes_total = filtered_df.groupby(['Month'])['Matrícula'].count().reset_index()
+    total = mes_total['Matrícula'].sum()
+    total_dia = len(list(filtered_df['Day'].unique()))
+    st.markdown(f"<h3 style='font-size:18px;'> Total: {total:.0f} </h3>", unsafe_allow_html=True)
     fig_date = create_bar_chart(mes_total, 'Month', 'Matrícula',None, "Visitas por Mês", color_map1=color_map1)
     st.plotly_chart(fig_date)
 
-
+    col11, col12 = st.columns(2)
+    ano = col11.selectbox('Ano', df['Year'].unique())
+    mes = col12.selectbox('Mês', m0)
     df_dia = df_filtrado[(df_filtrado['Year'] == ano) & (df_filtrado['Month'] == mes)]
 
     prod_dia = df_dia.groupby(['Day', 'Tipo de Ocorrência'])['Matrícula'].count().reset_index()
-    fig_date = create_line_chart(prod_dia, 'Day', 'Matrícula', None, "Visitas por dia", color_map1=color_map1)
+    fig_date1 = create_bar_chart(prod_dia, 'Day', 'Matrícula', None, "Visitas por dia", color_map1=color_map1)
     #prod_dia1 = df_filtrado.groupby(['Day'])['Matrícula'].count().reset_index()
     #fig_date.add_scatter(x=prod_dia1['Day'], y=prod_dia1['Matrícula'], mode='lines', name='Total')
 
-    pivot_table = pd.pivot_table(df_filtrado, values='Matrícula', index=['Localidade','Agente do Cadastro'], columns='Day', aggfunc='count')#, fill_value=0)
+    pivot_table = pd.pivot_table(df_dia, values='Matrícula', index=['Localidade','Agente do Cadastro'], columns='Day', aggfunc='count')#, fill_value=0)
     pivot_table['Total'] = pivot_table.sum(axis=1)
     media_valores = pivot_table.drop(columns=['Total']).mean(axis=1)
     media_valores = media_valores.round(0).astype(int)
     pivot_table['Média'] = media_valores
-    total_dia = len(list(df_filtrado['Day'].unique()))
+    total_dia = len(list(df_dia['Day'].unique()))
     total = pivot_table['Total'].sum()
     media = total/total_dia
-    
 
     #Visuais da Tela
     st.markdown(f"<h3 style='font-size:18px;'> Total: {total:.0f} - Número de dias trabalhados: {total_dia} - Média: {media:.0f} </h3>", unsafe_allow_html=True)
-    st.plotly_chart(fig_date)
+    st.plotly_chart(fig_date1)
     st.markdown("<h3 style='font-size:16px;'> Produção de Agentes por dia </h3>", unsafe_allow_html=True)
     st.dataframe(pivot_table)
     st.markdown("<h3 style='font-size:16px;'> Produção dos Validadores </h3>", unsafe_allow_html=True)
