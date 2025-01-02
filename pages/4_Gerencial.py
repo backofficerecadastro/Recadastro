@@ -22,9 +22,6 @@ def main():
     l0.sort()
     local = ['TODAS'] + l0
 
-    m0 = list(df['Month'].unique())
-    m0.sort(reverse=True)
-
     oc = ['VALIDÁVEL', 'NÃO VALIDÁVEL', 'TODAS']
     val = ['TODAS','Validado', 'Não Validado']
 
@@ -91,7 +88,7 @@ def main():
 
     col11, col12 = st.columns(2)
     ano = col11.selectbox('Ano', df['Year'].unique())
-    mes = col12.selectbox('Mês', m0)
+    mes = col12.selectbox('Mês', df['Month'].unique())
     df_dia = df_filtrado[(df_filtrado['Year'] == ano) & (df_filtrado['Month'] == mes)]
 
     prod_dia = df_dia.groupby(['Day', 'Tipo de Ocorrência'])['Matrícula'].count().reset_index()
