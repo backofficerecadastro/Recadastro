@@ -62,7 +62,7 @@ def main():
     with col02:
         end_date = st.date_input(
             "Data Final",
-            datetime(2024, 12, 31),
+            datetime(2025, 12, 31),
             min_value=datetime(2021, 6, 1),
             max_value=datetime(2026, 8, 1)
         )
