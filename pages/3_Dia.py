@@ -20,19 +20,14 @@ def main():
     l0.sort()
     local = ['TODAS'] + l0
 
-    m0 = list(df['Month'].unique())
-    m0.sort(reverse=True)
-
-    d0 = list(df['Day'].unique())
-
     oc = ['VALIDÁVEL', 'NÃO VALIDÁVEL', 'TODAS']
     val = ['TODAS','Validado', 'Não Validado']
 
     #Botões
     localidade = st.sidebar.selectbox('Localidade', local)
     ano = st.sidebar.selectbox('Ano', df['Year'].unique())
-    mes = st.sidebar.selectbox('Mês', m0)
-    dia = st.sidebar.selectbox('Dia', d0)
+    mes = st.sidebar.selectbox('Mês', df['Year'].unique())
+    dia = st.sidebar.selectbox('Dia', df['Day'].unique())
     tipo_de_ocorrencia = st.sidebar.selectbox('Tipo de Ocorrência', oc)
     tipo_de_validação = st.sidebar.selectbox('Tipo de Validação', val)
     
